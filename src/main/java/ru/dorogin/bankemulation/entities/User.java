@@ -1,14 +1,40 @@
 package ru.dorogin.bankemulation.entities;
 
-import javax.persistence.Entity;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
+@Data
+@NoArgsConstructor
+@Table(name = "users")
 public class User {
+
+    @Id
+    @GeneratedValue
+    @Column(name = "id")
     private int id;
-    private String email;
+
+    @Column(name = "username")
+    private String username;    // используется email пользователя
+
+    @Column(name = "password")
     private String password;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "lastname")
     private String lastName;
+
+    @Column(name = "patronymic")
     private String patronymic;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Collection<Role> roles;
 }
