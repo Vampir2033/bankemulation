@@ -15,7 +15,7 @@ public class User {
     @Id
     @GeneratedValue
     @Column(name = "id")
-    private int id;
+    private Integer id;
 
     @Column(name = "username")
     private String username;    // используется email пользователя

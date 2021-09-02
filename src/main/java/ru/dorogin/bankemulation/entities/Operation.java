@@ -11,9 +11,9 @@ enum OperationType{
     CLOSE
 }
 
-@Entity
+//@Entity
 public class Operation {
-    private int id;
+    private Integer id;
     private String accountId;
     private OperationType operation;
     private BigDecimal money;
