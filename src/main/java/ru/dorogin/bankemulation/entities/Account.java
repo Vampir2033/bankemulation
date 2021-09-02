@@ -5,7 +5,8 @@ import java.math.BigDecimal;
 
 @Entity
 public class Account {
-    String id;
-    Boolean status;
-    BigDecimal balance;
+    private String id;
+    private long userId;
+    private Boolean status;
+    private BigDecimal balance;
 }

@@ -1,6 +1,7 @@
 package ru.dorogin.bankemulation.entities;
 
 import javax.persistence.Entity;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 enum OperationType{
@@ -12,7 +13,9 @@ enum OperationType{
 
 @Entity
 public class Operation {
-    String accountId;
-    OperationType operation;
-    Timestamp time;
+    private int id;
+    private String accountId;
+    private OperationType operation;
+    private BigDecimal money;
+    private Timestamp timeOperation;
 }

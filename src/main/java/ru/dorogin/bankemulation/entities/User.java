@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 
 @Entity
 public class User {
-    private long id;
+    private int id;
     private String email;
     private String password;
     private String name;
