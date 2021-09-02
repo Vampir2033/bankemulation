@@ -4,7 +4,7 @@ CREATE TABLE users(
     password    varchar(80) NOT NULL,
     name        varchar(50) NOT NULL,
     lastName    varchar(50) NOT NULL,
-    patronymic  varchar(50) NOT NULL,
+    patronymic  varchar(50),
     PRIMARY KEY (id)
 );
 
