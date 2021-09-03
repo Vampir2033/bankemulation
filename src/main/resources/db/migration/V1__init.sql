@@ -35,7 +35,7 @@ CREATE TABLE accounts(
     id          varchar(50) NOT NULL,
     user_id     int NOT NULL,
     status      boolean NOT NULL,
-    balance     money NOT NULL,
+    balance     decimal(12,2) NOT NULL,
 
     PRIMARY KEY (id),
 
