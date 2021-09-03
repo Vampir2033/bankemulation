@@ -34,10 +34,9 @@ public class AccountController {
         return accountService.getAllAccounts();
     }
 
-    // todo исправить возвращаемое значение на String
     @GetMapping("/open")
     @ResponseBody
-    Account openAccount(Principal principal){
+    String openAccount(Principal principal){
         User user = userService.findUserByUsername(principal.getName());
         return accountService.openAccount(user);
     }
@@ -62,6 +61,35 @@ public class AccountController {
         User user = userService.findUserByUsername(principal.getName());
         try {
             return accountService.deposit(user, accountId, cash);
+        }
+        catch (Exception exception){
+            return exception.getMessage();
+        }
+    }
+
+    @GetMapping("/removing")
+    @ResponseBody
+    String removing(Principal principal,
+                    @RequestParam(value = "accountId") String accountId,
+                    @RequestParam(value = "cash") BigDecimal cash){
+        User user = userService.findUserByUsername(principal.getName());
+        try {
+            return accountService.removing(user, accountId, cash);
+        }
+        catch (Exception exception){
+            return exception.getMessage();
+        }
+    }
+
+    @GetMapping("/transferring")
+    @ResponseBody
+    Object removing(Principal principal,
+                    @RequestParam(value = "fromAccountId") String fromAccountId,
+                    @RequestParam(value = "toAccountId") String toAccountId,
+                    @RequestParam(value = "cash") BigDecimal cash){
+        User user = userService.findUserByUsername(principal.getName());
+        try {
+            return accountService.transferring(user, fromAccountId, toAccountId, cash);
         }
         catch (Exception exception){
             return exception.getMessage();

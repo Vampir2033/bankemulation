@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.dorogin.bankemulation.entities.Account;
 import ru.dorogin.bankemulation.entities.User;
 import ru.dorogin.bankemulation.repositories.AccountRepository;
+import ru.dorogin.bankemulation.services.utils.PairBalance;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -22,7 +23,7 @@ public class AccountService {
         return accountRepository.findAll();
     }
 
-    public Account openAccount(User user){
+    public String openAccount(User user){
         String accountNumber;
         Random random = new Random();
         do {
@@ -32,7 +33,7 @@ public class AccountService {
         }while(accountRepository.findById(accountNumber).isPresent());
         Account account = new Account(accountNumber, user.getId(), true, BigDecimal.valueOf(0));
         accountRepository.save(account);
-        return account;
+        return account.getId();
     }
 
     Account checkAccountOwnership(String accountId, User user) throws SecurityException{
@@ -54,15 +55,58 @@ public class AccountService {
         return accountId;
     }
 
-    public String deposit(User user, String accountId, BigDecimal cash) throws IllegalStateException, SecurityException, IllegalArgumentException{
-        Account account = checkAccountOwnership(accountId, user);
+    void checkPossibilityToDeposit(Account account, BigDecimal cash)
+            throws IllegalArgumentException, IllegalStateException{
         if(cash.compareTo(BigDecimal.ZERO) <= 0)
-            throw new IllegalArgumentException("Недопустимая сумма для внесения");
+            throw new IllegalArgumentException("Некорректная сумма операции");
         if(!account.getStatus())
             throw new IllegalStateException("Невозможно внести деньги на закрытый счёт");
+    }
+
+    public String deposit(User user, String accountId, BigDecimal cash)
+            throws IllegalStateException, SecurityException, IllegalArgumentException{
+        Account account = checkAccountOwnership(accountId, user);
+        checkPossibilityToDeposit(account, cash);
         account.setBalance(account.getBalance().add(cash));
         accountRepository.setBalance(accountId, account.getBalance());
         return account.getBalance().toString();
+    }
+
+    void checkPossibilityToRemoving(Account account, BigDecimal cash)
+            throws IllegalArgumentException, IllegalStateException{
+        if(cash.compareTo(BigDecimal.ZERO) <= 0)
+            throw new IllegalArgumentException("Некорректная сумма для снятия");
+        if(account.getBalance().compareTo(BigDecimal.ZERO) <= 0)
+            throw new IllegalStateException("Снятие денег с пустого счёта недопустимо");
+        if(cash.compareTo(account.getBalance()) > 0)
+            throw new IllegalArgumentException("Невозможно снять денег больше, чем есть на счёте");
+    }
+
+
+    public String removing(User user, String accountId, BigDecimal cash) throws IllegalStateException, SecurityException, IllegalArgumentException{
+        Account account = checkAccountOwnership(accountId, user);
+        checkPossibilityToRemoving(account, cash);
+        account.setBalance(account.getBalance().subtract(cash));
+        accountRepository.setBalance(accountId, account.getBalance());
+        return account.getBalance().toString();
+    }
+
+    public Object transferring(User user, String fromAccountId, String toAccountId, BigDecimal cash)
+            throws IllegalStateException, SecurityException, IllegalArgumentException{
+        Account fromAccount = checkAccountOwnership(fromAccountId, user);
+        checkPossibilityToRemoving(fromAccount, cash);
+        Account toAccount = accountRepository.findById(toAccountId)
+                .orElseThrow(() -> new SecurityException("Счёт получателя не найден"));
+        if(fromAccount.getId() == toAccount.getId()){
+            throw new IllegalArgumentException("Счета отправителя и получателя имеют одинаковое значение");
+        }
+        checkPossibilityToDeposit(toAccount, cash);
+        fromAccount.setBalance(fromAccount.getBalance().subtract(cash));
+        accountRepository.setBalance(fromAccountId, fromAccount.getBalance());
+        toAccount.setBalance(toAccount.getBalance().add(cash));
+        accountRepository.setBalance(toAccountId, toAccount.getBalance());
+
+        return new PairBalance(fromAccount.getBalance(), toAccount.getBalance());
     }
 
 }
