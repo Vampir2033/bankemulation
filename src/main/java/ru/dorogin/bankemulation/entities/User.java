@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.Collection;
 
+
+// todo реализовать проверку данных
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -13,7 +16,7 @@ import java.util.Collection;
 public class User {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 

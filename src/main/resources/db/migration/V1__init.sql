@@ -5,13 +5,15 @@ CREATE TABLE users(
     name        varchar(50) NOT NULL,
     lastName    varchar(50) NOT NULL,
     patronymic  varchar(50),
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    CONSTRAINT UK_USERNAME UNIQUE (username)
 );
 
 CREATE TABLE roles(
     id          serial,
     name        varchar(50) DEFAULT NULL,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    CONSTRAINT UK_NAME UNIQUE (name)
 );
 
 CREATE TABLE user_roles (
