@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 @Table(name = "accounts")
 public class Account {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name = "id")
     private String id;
 
@@ -24,4 +23,11 @@ public class Account {
 
     @Column(name = "balance")
     private BigDecimal balance;
+
+    public Account(String id, Integer userId, Boolean status, BigDecimal balance) {
+        this.id = id;
+        this.userId = userId;
+        this.status = status;
+        this.balance = balance;
+    }
 }
