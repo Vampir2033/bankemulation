@@ -35,9 +35,16 @@ public class AccountService {
         return account;
     }
 
-    public String closeAccount(User user, String accountId) throws IllegalStateException, NoSuchElementException{
-        Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new NoSuchElementException("Не существует номера счёта с идентификатором: " + accountId));
+    Account checkAccountOwnership(String accountId, User user) throws SecurityException{
+        Account account = accountRepository.findById(accountId).orElse(null);
+        if(account == null || account.getUserId() != user.getId())
+            throw new SecurityException("Отказано в доступе");
+        else
+            return account;
+    }
+
+    public String closeAccount(User user, String accountId) throws IllegalStateException, SecurityException{
+        Account account = checkAccountOwnership(accountId, user);
         if(account.getBalance().compareTo(BigDecimal.ZERO) != 0)
             throw new IllegalStateException("Невозможно закрыть счёт, на котором ненулевой балланс");
         if(!account.getStatus()){
@@ -46,4 +53,16 @@ public class AccountService {
         accountRepository.setStatusById(accountId, false);
         return accountId;
     }
+
+    public String deposit(User user, String accountId, BigDecimal cash) throws IllegalStateException, SecurityException, IllegalArgumentException{
+        Account account = checkAccountOwnership(accountId, user);
+        if(cash.compareTo(BigDecimal.ZERO) <= 0)
+            throw new IllegalArgumentException("Недопустимая сумма для внесения");
+        if(!account.getStatus())
+            throw new IllegalStateException("Невозможно внести деньги на закрытый счёт");
+        account.setBalance(account.getBalance().add(cash));
+        accountRepository.setBalance(accountId, account.getBalance());
+        return account.getBalance().toString();
+    }
+
 }

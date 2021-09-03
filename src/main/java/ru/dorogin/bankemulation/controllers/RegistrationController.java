@@ -20,11 +20,4 @@ public class RegistrationController {
 
         return "registration";
     }
-
-    @PostMapping
-    public String addRoute(@ModelAttribute("userForm") User user){
-        userService.saveUser(user);
-        return "redirect:/login";
-
-    }
 }

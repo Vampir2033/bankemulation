@@ -2,15 +2,13 @@ package ru.dorogin.bankemulation.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import ru.dorogin.bankemulation.entities.Account;
 import ru.dorogin.bankemulation.entities.User;
 import ru.dorogin.bankemulation.services.AccountService;
 import ru.dorogin.bankemulation.services.UserService;
 
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.List;
 
@@ -50,6 +48,20 @@ public class AccountController {
         User user = userService.findUserByUsername(principal.getName());
         try {
             return accountService.closeAccount(user, accountId);
+        }
+        catch (Exception exception){
+            return exception.getMessage();
+        }
+    }
+
+    @GetMapping("/deposit")
+    @ResponseBody
+    String deposit(Principal principal,
+                   @RequestParam(value = "accountId") String accountId,
+                   @RequestParam(value = "cash") BigDecimal cash){
+        User user = userService.findUserByUsername(principal.getName());
+        try {
+            return accountService.deposit(user, accountId, cash);
         }
         catch (Exception exception){
             return exception.getMessage();
