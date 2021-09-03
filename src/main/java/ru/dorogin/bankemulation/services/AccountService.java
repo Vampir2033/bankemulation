@@ -7,8 +7,7 @@ import ru.dorogin.bankemulation.entities.User;
 import ru.dorogin.bankemulation.repositories.AccountRepository;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class AccountService {
@@ -34,5 +33,17 @@ public class AccountService {
         Account account = new Account(accountNumber, user.getId(), true, BigDecimal.valueOf(0));
         accountRepository.save(account);
         return account;
+    }
+
+    public String closeAccount(User user, String accountId) throws IllegalStateException, NoSuchElementException{
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new NoSuchElementException("Не существует номера счёта с идентификатором: " + accountId));
+        if(account.getBalance().compareTo(BigDecimal.ZERO) != 0)
+            throw new IllegalStateException("Невозможно закрыть счёт, на котором ненулевой балланс");
+        if(!account.getStatus()){
+            throw new IllegalStateException("Счёт уже закрыт");
+        }
+        accountRepository.setStatusById(accountId, false);
+        return accountId;
     }
 }

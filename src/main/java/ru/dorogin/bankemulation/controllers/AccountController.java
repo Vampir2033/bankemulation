@@ -3,6 +3,7 @@ package ru.dorogin.bankemulation.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import ru.dorogin.bankemulation.entities.Account;
@@ -41,5 +42,17 @@ public class AccountController {
     Account openAccount(Principal principal){
         User user = userService.findUserByUsername(principal.getName());
         return accountService.openAccount(user);
+    }
+
+    @GetMapping("/close/{accountId}")
+    @ResponseBody
+    String openAccount(Principal principal, @PathVariable(value = "accountId")String accountId){
+        User user = userService.findUserByUsername(principal.getName());
+        try {
+            return accountService.closeAccount(user, accountId);
+        }
+        catch (Exception exception){
+            return exception.getMessage();
+        }
     }
 }
