@@ -1,11 +1,11 @@
-INSERT INTO users (id,username, password, name, lastName, patronymic)
+INSERT INTO users (username, password, name, lastName, patronymic)
 VALUES
-(1,'petia@mail.ru', '$2a$10$HSjtIauaVVTqCiy2DqOayuRs28yNXLku9PQDhAclSHS6K1amMly/i', 'Пётр', 'Иванов', 'Романович'),
-(2,'vova@mail.ru', '$2a$10$HSjtIauaVVTqCiy2DqOayuRs28yNXLku9PQDhAclSHS6K1amMly/i', 'Владимир', 'Погорелов', 'Иванович');
+('petia@mail.ru', '$2a$10$HSjtIauaVVTqCiy2DqOayuRs28yNXLku9PQDhAclSHS6K1amMly/i', 'Пётр', 'Иванов', 'Романович'),
+('vova@mail.ru', '$2a$10$HSjtIauaVVTqCiy2DqOayuRs28yNXLku9PQDhAclSHS6K1amMly/i', 'Владимир', 'Погорелов', 'Иванович');
 
-INSERT INTO users (id,username, password, name, lastName)
+INSERT INTO users (username, password, name, lastName)
 VALUES
-(3,'vasia@mail.ru', '$2a$10$HSjtIauaVVTqCiy2DqOayuRs28yNXLku9PQDhAclSHS6K1amMly/i', 'Василий', 'Погорелов');
+('vasia@mail.ru', '$2a$10$HSjtIauaVVTqCiy2DqOayuRs28yNXLku9PQDhAclSHS6K1amMly/i', 'Василий', 'Погорелов');
 
 INSERT INTO roles (id,name)
 VALUES

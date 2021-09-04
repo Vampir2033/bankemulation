@@ -17,7 +17,13 @@ public class RegistrationController {
     @GetMapping
     public String registration(Model model) {
         model.addAttribute("userForm", new User());
-
         return "registration";
+    }
+
+    @PostMapping
+    public String addRoute(@ModelAttribute("userForm") User user){
+        userService.saveUser(user);
+        return "redirect:/login";
+
     }
 }

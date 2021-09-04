@@ -1,5 +1,5 @@
 CREATE TABLE users(
-    id serial,
+    id          serial,
     username    varchar(50) NOT NULL,
     password    varchar(80) NOT NULL,
     name        varchar(50) NOT NULL,
@@ -47,7 +47,7 @@ CREATE TABLE operations(
     id              serial,
     account_id      varchar(50) NOT NULL,
     operation       int NOT NULL,
-    money           money,
+    money           decimal(12,2),
     time_operation  timestamp NOT NULL,
 
     PRIMARY KEY (id),
