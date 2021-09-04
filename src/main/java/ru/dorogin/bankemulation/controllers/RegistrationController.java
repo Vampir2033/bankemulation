@@ -35,6 +35,10 @@ public class RegistrationController {
             System.out.println(bindingResult);
             return "registration";
         }
+        if(userService.findUserByUsername(user.getUsername()) != null) {
+            user.setUsername("Этот email уже используется");
+            return "registration";
+        }
         userService.saveUser(user);
         return "redirect:/login";
 
