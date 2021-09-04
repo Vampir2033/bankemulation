@@ -10,13 +10,21 @@ import ru.dorogin.bankemulation.services.utils.PairBalance;
 import java.math.BigDecimal;
 import java.util.*;
 
+// todo вывести список счетов
+
 @Service
 public class AccountService {
     private AccountRepository accountRepository;
+    private OperationService operationService;
 
     @Autowired
     public void setAccountRepository(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
+    }
+
+    @Autowired
+    public void setOperationService(OperationService operationService) {
+        this.operationService = operationService;
     }
 
     public List<Account> getAllAccounts(){
@@ -52,6 +60,7 @@ public class AccountService {
             throw new IllegalStateException("Счёт уже закрыт");
         }
         accountRepository.setStatusById(accountId, false);
+        operationService.addOperationClose(account);
         return accountId;
     }
 
@@ -69,6 +78,7 @@ public class AccountService {
         checkPossibilityToDeposit(account, cash);
         account.setBalance(account.getBalance().add(cash));
         accountRepository.setBalance(accountId, account.getBalance());
+        operationService.addOperationDeposit(account, cash);
         return account.getBalance().toString();
     }
 
@@ -88,6 +98,7 @@ public class AccountService {
         checkPossibilityToRemoving(account, cash);
         account.setBalance(account.getBalance().subtract(cash));
         accountRepository.setBalance(accountId, account.getBalance());
+        operationService.addOperationRemoving(account, cash);
         return account.getBalance().toString();
     }
 
@@ -105,7 +116,7 @@ public class AccountService {
         accountRepository.setBalance(fromAccountId, fromAccount.getBalance());
         toAccount.setBalance(toAccount.getBalance().add(cash));
         accountRepository.setBalance(toAccountId, toAccount.getBalance());
-
+        operationService.addOperationTransferring(fromAccount, cash);
         return new PairBalance(fromAccount.getBalance(), toAccount.getBalance());
     }
 
