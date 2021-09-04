@@ -28,6 +28,13 @@ public class AccountController {
         this.userService = userService;
     }
 
+    @GetMapping
+    @ResponseBody
+    public Object getAccounts(Principal principal){
+        User user = userService.findUserByUsername(principal.getName());
+        return accountService.getAccountsByUser(user);
+    }
+
     @GetMapping("/get-all")
     @ResponseBody
     List<Account> getAllAccounts(){

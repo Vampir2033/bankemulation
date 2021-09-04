@@ -10,8 +10,6 @@ import ru.dorogin.bankemulation.services.utils.PairBalance;
 import java.math.BigDecimal;
 import java.util.*;
 
-// todo вывести список счетов
-
 @Service
 public class AccountService {
     private AccountRepository accountRepository;
@@ -25,6 +23,11 @@ public class AccountService {
     @Autowired
     public void setOperationService(OperationService operationService) {
         this.operationService = operationService;
+    }
+
+    public Object getAccountsByUser(User user){
+        List<Account> accounts = accountRepository.findByUserId(user.getId());
+        return accounts.isEmpty() ? "У вас нет счетов" : accounts;
     }
 
     public List<Account> getAllAccounts(){

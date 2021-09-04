@@ -24,4 +24,6 @@ public interface AccountRepository extends JpaRepository<Account, String> {
     @Modifying
     @Query("UPDATE Account a SET a.balance = ?2 WHERE a.id = ?1")
     void setBalance(String accountId, BigDecimal status);
+
+    public List<Account> findByUserId(Integer userId);
 }

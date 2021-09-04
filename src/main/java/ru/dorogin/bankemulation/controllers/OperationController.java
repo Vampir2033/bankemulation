@@ -47,9 +47,7 @@ public class OperationController {
         try{
             StringBuilder result = new StringBuilder();
             for(Operation op : operationService.getAccountOperations(user, accountId))
-                result.append(op.getAccountId())
-                        .append("\t")
-                        .append(op.getOperation())
+                result.append(op.getOperation())
                         .append((op.getOperation() != OperationType.CLOSE) ? "\t" + op.getMoney().toString() : "")
                         .append("<br>");
             return result.toString();

@@ -23,12 +23,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.userService = userService;
     }
 
+    // todo исправить форму, распределить ссылки
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/", "/registration", "/accounts/get-all").permitAll()
-                .antMatchers("/secured").hasAnyRole("USER")
-                .antMatchers("/accounts/open", "/accounts/**", "/operations/**").authenticated()
+                .antMatchers("/", "/registration").permitAll()
+                .antMatchers("/accounts/**", "/operations/**").authenticated()
                 .and()
                 .formLogin().permitAll();
     }

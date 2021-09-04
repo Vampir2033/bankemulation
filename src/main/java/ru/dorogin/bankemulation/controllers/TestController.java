@@ -14,15 +14,10 @@ import java.util.List;
 @RequestMapping("/")
 public class TestController {
 
+    // todo сделать редирект на регистрацию
     @GetMapping
     @ResponseBody
     String index(){
         return "Hello Test";
-    }
-
-    @GetMapping(value = "/secured")
-    @ResponseBody
-    String secured(){
-        return "Are you hacker?";
     }
 }
