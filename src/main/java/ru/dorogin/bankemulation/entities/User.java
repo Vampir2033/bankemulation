@@ -9,9 +9,6 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.Collection;
 
-
-// todo реализовать проверку данных
-
 @Entity
 @Data
 @NoArgsConstructor

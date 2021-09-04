@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ru.dorogin.bankemulation.services.UserService;
 
@@ -17,21 +18,23 @@ import ru.dorogin.bankemulation.services.UserService;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private UserService userService;
-
     @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
     }
 
-    // todo исправить форму, распределить ссылки
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/", "/registration").permitAll()
-                .antMatchers("/accounts/**", "/operations/**").authenticated()
+        http
+                .httpBasic()
                 .and()
-                .formLogin().permitAll();
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeRequests()
+                .antMatchers("/", "/registration").permitAll()
+//                .antMatchers("/accounts/open", "/accounts/**", "/operations/**").authenticated();
+                .anyRequest().authenticated();
     }
 
     @Override
