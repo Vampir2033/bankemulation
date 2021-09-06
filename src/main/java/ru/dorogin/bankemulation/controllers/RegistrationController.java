@@ -1,6 +1,7 @@
 package ru.dorogin.bankemulation.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import ru.dorogin.bankemulation.entities.User;
 import ru.dorogin.bankemulation.services.UserService;
 
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 
@@ -30,7 +33,8 @@ public class RegistrationController {
 
     @PostMapping
     public String addRoute(@ModelAttribute("userForm") @Valid User user,
-                           BindingResult bindingResult){
+                           BindingResult bindingResult,
+                           HttpServletResponse response){
         if(bindingResult.hasErrors()) {
             System.out.println(bindingResult);
             return "registration";
@@ -40,7 +44,6 @@ public class RegistrationController {
             return "registration";
         }
         userService.saveUser(user);
-        return "redirect:/login";
-
+        throw new DataIntegrityViolationException("Успешная регистрация");
     }
 }
