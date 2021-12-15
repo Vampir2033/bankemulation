@@ -18,7 +18,6 @@ public class Operation {
     private Integer id;
 
     @Column(name = "account_id")
-//    @ManyToOne()
     private String accountId;
 
     @Column(name = "operation")

@@ -11,6 +11,7 @@ import ru.dorogin.bankemulation.services.UserService;
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/accounts")
@@ -28,17 +29,28 @@ public class AccountController {
         this.userService = userService;
     }
 
+    private String presentAccounts(List<Account> accounts){
+        if(accounts.isEmpty()){
+            return "Отсутствуют аккаунты";
+        } else {
+            return accounts.stream()
+                    .map(Account::toString)
+                    .collect(Collectors
+                            .joining("<br>", "Список аккаунтов:<br>",  ""));
+        }
+    }
+
     @GetMapping
     @ResponseBody
-    public Object getAccounts(Principal principal){
+    public String getAccounts(Principal principal){
         User user = userService.findUserByUsername(principal.getName());
-        return accountService.getAccountsByUser(user);
+        return presentAccounts(accountService.getAccountsByUser(user));
     }
 
     @GetMapping("/get-all")
     @ResponseBody
-    List<Account> getAllAccounts(){
-        return accountService.getAllAccounts();
+    String getAllAccounts(){
+        return presentAccounts(accountService.getAllAccounts());
     }
 
     @GetMapping("/open")

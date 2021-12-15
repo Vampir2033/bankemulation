@@ -30,4 +30,14 @@ public class Account {
         this.status = status;
         this.balance = balance;
     }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id='" + id + '\'' +
+                ", userId=" + userId +
+                ", status=" + status +
+                ", balance=" + balance +
+                '}';
+    }
 }

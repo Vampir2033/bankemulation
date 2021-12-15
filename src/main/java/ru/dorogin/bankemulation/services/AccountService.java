@@ -25,9 +25,8 @@ public class AccountService {
         this.operationService = operationService;
     }
 
-    public Object getAccountsByUser(User user){
-        List<Account> accounts = accountRepository.findByUserId(user.getId());
-        return accounts.isEmpty() ? "У вас нет счетов" : accounts;
+    public List<Account> getAccountsByUser(User user){
+        return accountRepository.findByUserId(user.getId());
     }
 
     public List<Account> getAllAccounts(){
@@ -35,21 +34,21 @@ public class AccountService {
     }
 
     public String openAccount(User user){
-        String accountNumber;
+        StringBuilder accountNumber;
         Random random = new Random();
         do {
-            accountNumber = "";
+            accountNumber = new StringBuilder();
             for (int i = 0; i < 20; i++)
-                accountNumber += random.nextInt(10);
-        }while(accountRepository.findById(accountNumber).isPresent());
-        Account account = new Account(accountNumber, user.getId(), true, BigDecimal.valueOf(0));
+                accountNumber.append(random.nextInt(10));
+        }while(accountRepository.findById(accountNumber.toString()).isPresent());
+        Account account = new Account(accountNumber.toString(), user.getId(), true, BigDecimal.valueOf(0));
         accountRepository.save(account);
         return account.getId();
     }
 
     Account checkAccountOwnership(String accountId, User user) throws SecurityException{
         Account account = accountRepository.findById(accountId).orElse(null);
-        if(account == null || account.getUserId() != user.getId())
+        if(account == null || !account.getUserId().equals(user.getId()))
             throw new SecurityException("Отказано в доступе");
         else
             return account;
@@ -110,8 +109,8 @@ public class AccountService {
         Account fromAccount = checkAccountOwnership(fromAccountId, user);
         checkPossibilityToRemoving(fromAccount, cash);
         Account toAccount = accountRepository.findById(toAccountId)
-                .orElseThrow(() -> new SecurityException("Счёт получателя не найден"));
-        if(fromAccount.getId() == toAccount.getId()){
+                .orElseThrow(() -> new IllegalArgumentException("Счёт получателя не найден"));
+        if(fromAccount.getId().equals(toAccount.getId())){
             throw new IllegalArgumentException("Счета отправителя и получателя имеют одинаковое значение");
         }
         checkPossibilityToDeposit(toAccount, cash);
